@@ -1,0 +1,19 @@
+#sbts-specific
+*.class
+.lib/
+target/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.config/
+.classpath
+.project
+.settings
+*.tmp
+
+
+#Intellij-specific
+.idea/
+*.iml
+.idea_modules
