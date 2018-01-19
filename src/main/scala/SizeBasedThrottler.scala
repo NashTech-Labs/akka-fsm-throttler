@@ -45,6 +45,8 @@ class SizeBasedThrottler extends FSM[State, StateData] {
       // we've just processed old data
       // drop the old queue and create a new one with the new message
       goto(Waiting) using StateData(Queue(msg))
+    //handling unexpected message
+    case Event(_, _) => stay()
   }
 
   when(Waiting, stateTimeout = 2 seconds){
@@ -52,10 +54,12 @@ class SizeBasedThrottler extends FSM[State, StateData] {
       val newQueue = oldQueue :+ msg
       println(s"$curTime at Idle $newQueue")
       stay() using StateData(newQueue)
-
+    //time to process requests
     case Event(Flush, StateData(queue)) => goto(Active) using StateData(queue)
-
+    //Wait till given time
     case Event(StateTimeout, StateData(queue)) => goto(Active) using StateData(queue)
+     //handling unexpected message
+    case Event(_, StateData(queue)) => stay() using StateData(queue)
 
   }
 
@@ -63,13 +67,15 @@ class SizeBasedThrottler extends FSM[State, StateData] {
 }
 
 object demo extends App  {
+  val threshold = 3
+  val numberOfRequests = 20
   val actorSystem = ActorSystem("system")
   val actor = actorSystem.actorOf(Props(classOf[SizeBasedThrottler]))
    for{
-     i <- 1 to 20
+     i <- 1 to numberOfRequests
      _ = println(s"Send $i")
      _ = actor ! Msg(i)
-     _ = if(i % 3 == 0) actor ! Flush
+     _ = if(i % threshold == 0) actor ! Flush
    } yield {}
 
 }
