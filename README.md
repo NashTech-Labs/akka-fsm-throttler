@@ -5,4 +5,4 @@ To configure the parallelism on the basis of number of request we need throttler
 
 # To run
 >sbt clean compile
->sbt run
+sbt run
