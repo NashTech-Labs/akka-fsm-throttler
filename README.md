@@ -9,8 +9,6 @@ git clone https://github.com/knoldus/akka-fsm-throttler.git
 cd akka-fsm-throttler
 ```
 # Build the code
-Build the code
-
 If this is your first time running SBT, you have to download the used dependencies.
 ```
 cd akka-fsm-throttler
